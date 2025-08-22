@@ -14,6 +14,7 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1 {
@@ -121,13 +122,13 @@ h1 {
 60px 크기의 초록색 원 모양으로 게임에서 다른 태그들보다 위에 나타나고, 0.4초 동안 부드럽게 커지거나
 사라지는 애니메이션을 재생하며, 클릭은 하지 못하도록 설정*/
 .hit-effect {
-  position: absolute;   /* 위치 기준 설정*/
+  position: absolute; /* 위치 기준 설정*/
   background: #28a745;
   border-radius: 50%;
-  width: 60px;  /* 원형의 가로 버니*/
+  width: 60px; /* 원형의 가로 버니*/
   height: 60px; /* 원형의 세로 너비*/
   pointer-events: none; /* 클릭하는 이벤트를 무시 */
-  z-index: 15;  /* 표시 순서를 맨 앞으로 설정해서 css 효과를 다른 태그에 가려지지 않도록 설정 */
+  z-index: 15; /* 표시 순서를 맨 앞으로 설정해서 css 효과를 다른 태그에 가려지지 않도록 설정 */
   animation: hitEffect 0.4s ease-out forwards;
 }
 /*
@@ -136,18 +137,18 @@ hitEffect 라는 이름의 애니메이션이 재생될 때, 시작(0%)부터 �
 */
 
 @keyframes hitEffect {
-    /* 애니메이션 시작 (0초 시점) */
+  /* 애니메이션 시작 (0초 시점) */
 
-    /* 평균 크기의 스케일 scale(1) = 100% 일반적인 크기 */
+  /* 평균 크기의 스케일 scale(1) = 100% 일반적인 크기 */
   0% {
     transform: scale(0.5); /* 크기 : 원래의 절반(30px)에서 시작 */
-    opacity: 1;            /* 투명도 : 완전히 불투명(초록원이 선명하게 보임) */
+    opacity: 1; /* 투명도 : 완전히 불투명(초록원이 선명하게 보임) */
   }
 
   /* 애니메이션 끝 (.hit-effect 에서 animation에서 설정한 시간이 -.4초이기 때문에 끝나는 시점 0.4 임*/
   100% {
     transform: scale(2); /* 크기 : 원래의 2배(120px)까지 커디도록 설정 */
-    opacity: 0;          /* 투명도 : 완전히 투명해서 사라지는 효과 생성 */
+    opacity: 0; /* 투명도 : 완전히 투명해서 사라지는 효과 생성 */
   }
 }
 
@@ -182,6 +183,32 @@ hitEffect 라는 이름의 애니메이션이 재생될 때, 시작(0%)부터 �
   display: none;
 }
 
+.passed {
+  background-color: #495057; /* 기존보다 약간 어두운 회색으로 변경 */
+  transform: translateY(2px); /* 살짝 아래로 눌리는 효과 */
+}
+
+#startBtn {
+  background-color: #17a2b8;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+#startBtn:hover {
+  background-color: #1db9d1;
+}
+
+#startBtn:active {
+  background-color: #128496;
+}
+
+/*********************************************
+********* @media 는 css 맨 아래 위치 **********
+**********************************************/
 /* iPhone SE (375px) */
 @media (max-width: 375px) {
   h1 {

@@ -108,9 +108,9 @@ $(function () {
     const laneOffset = lane.position();
 
     const effect = $("<div class='hit-effect'>").css({
-        // 레인 중앙에 위치하도록 x좌표 계산(효과 크기의 절반만큼 보정)
+      // 레인 중앙에 위치하도록 x좌표 계산(효과 크기의 절반만큼 보정)
       left: laneOffset.left + lane.width() / 2 - 30 + "px",
-        // 판정선 위쪽에 위치하도록 y좌표 설정
+      // 판정선 위쪽에 위치하도록 y좌표 설정
       top: $("#game-container").height() - 120 + "px",
     });
 
@@ -166,10 +166,66 @@ $(function () {
         }
       }
     });
+    /**
+     * mousedown : 마우스를 사용하는 기기를 위한 이벤트
+     *
+     * touchstart : 터치스크린이 있는 기기를 위한 이벤트
+     *              손가락이 화면에 닿앗을 때 발생
+     *
+     * mousedown으로만 모두 처리 가능하긴함
+     *
+     * 하지만 반응 속도 지연 발생
+     * 모바일 브라우저는 사용자가 화면을 터치했을 때, 이것이 한 번의 탭인지
+     * 아니면 화면을 확대하기 위한 더블 탭인지 구분하기 위해
+     * 0.3초 정도 기다린 후 작업 진행
+     *
+     * 과제 : 마우스 클릭 및 모바일 터치 처리
+     * $(".key").on("mousedown touchstart", function(e) {
+     *  e.preventDefault(); // 더블 클릭 시 확대 등 기본 동작 방지
+     *
+     * })
+     *
+     *
+     */
+
+    // $(".key").on("mousedown touchstart", function (e) {
+    $(".key").on("touchstart", ".key", function (e) {
+      e.preventDefault(); // 더블 클릭 시 확대 등 기본 동작 방지
+      e.stopPropagation();
+      const lane = $(this).parent().index();
+      const judgeLine = $("#game-container").height() - 80;
+      $(".note").each(function () {
+        if ($(this).data("lane") === lane) {
+          const notePos = $(this).position().top + 25;
+          if (Math.abs(notePos - judgeLine) < 50) {
+            // abs 절대값으로 -50도 50으로 처리
+            $(this).stop().remove();
+            score++;
+            $("#score").text(score);
+            성공함수(lane);
+            $(".key").eq(lane).addClass("perfect");
+            setTimeout(() => $(".key").eq(lane).removeClass("perfect"), 300);
+            return false;
+          }
+        }
+      });
+    });
+
     // 성공 / 실패 관계없이 항상 키 눌림 설정에 대해서 css 적으로 보여주기
+    // $(".key").eq(lane) 현재 눌림을 당하고 있는 키에 passed 클래스 추가
     $(".key").eq(lane).addClass("passed");
+    // 0.1 초 후 눌림을 당하고 눌림 당하기를 종료한 레인 키에 passed 클래스 제거
     setTimeout(() => $(".key").eq(lane).removeClass("passed"), 300);
   });
 
-  startGame();
+  $("#startBtn").on("click", function () {
+    score = 0; // 플레이어의 현재 점수
+    miss = 0; // 놓친 아이템 수
+    timeLeft = 60; // 남은 게임 시간 (1분 = 초)
+    gameActive = true; // 게임 진행 상태 확인
+    gameInterval; // 떨어지는 아이템 생성 후 id 값 설정
+    timerInterval; // 타이머 ID
+    $("#game-over").hide();
+    startGame();
+  });
 });
