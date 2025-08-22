@@ -99,6 +99,27 @@ $(function () {
   }
 
   /**
+   * 아이템 적중 시 시각적으로 적중했다는 효과를 생성하는 함수
+   * @param {number} laneIndex - 효과를 표시할 레인 번호(0 ~ 3) 매개변수
+   */
+  function 성공함수(laneIndex) {
+    // 해당 레인의 위치 정보 가져오기
+    const lane = $(".lane").eq(laneIndex);
+    const laneOffset = lane.position();
+
+    const effect = $("<div class='hit-effect'>").css({
+        // 레인 중앙에 위치하도록 x좌표 계산(효과 크기의 절반만큼 보정)
+      left: laneOffset.left + lane.width() / 2 - 30 + "px",
+        // 판정선 위쪽에 위치하도록 y좌표 설정
+      top: $("#game-container").height() - 120 + "px",
+    });
+
+    $("body").append(effect);
+
+    setTimeout(() => effect.remove(), 400);
+  }
+
+  /**
    * 키보드 입력 처리 함수
    * - d, f, j, k 키 입력을 감지하여 아이템 판정을 수행한다.
    */
@@ -131,9 +152,23 @@ $(function () {
           $(this).stop().remove();
           score++;
           $("#score").text(score);
+
+          // 성공 시각 효과 실행
+          성공함수(lane);
+
+          // 해당 키 버튼에 성공 효과 클래스 추가
+          $(".key").eq(lane).addClass("perfect");
+          setTimeout(() => $(".key").eq(lane).removeClass("perfect"), 300);
+          // setTimeout을 이용해서 입력한 키보드 효과를 0.3초 후 누름 뗌 설정에 대해서
+          // CSS 제공
+
+          return false; //each 루트 중단(하나의 아이템만 처리)
         }
       }
     });
+    // 성공 / 실패 관계없이 항상 키 눌림 설정에 대해서 css 적으로 보여주기
+    $(".key").eq(lane).addClass("passed");
+    setTimeout(() => $(".key").eq(lane).removeClass("passed"), 300);
   });
 
   startGame();
